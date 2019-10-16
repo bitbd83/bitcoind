@@ -1,0 +1,9 @@
+language: docker
+
+os:
+  - linux
+install:
+  - docker build -t nexbitio/bitcoind .
+
+notifications:
+  email: developer@nexbit.io
