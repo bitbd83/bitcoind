@@ -28,10 +28,9 @@ rpcpassword=${BTC_RPCPASSWORD:-changemeplz}
 # How many seconds bitcoin will wait for a complete RPC HTTP request.
 # after the HTTP connection is established.
 rpcclienttimeout=${BTC_RPCCLIENTTIMEOUT:-30}
+# Can use multiple entries or can allow all.
+rpcallowip=${BTC_RPCALLOWIP:-::/0}
 
-rpcallowip=${BTC_RPCALLOWIP:-::/0}
-rpcallowip=${BTC_RPCALLOWIP:-::/0}
-rpcallowip=${BTC_RPCALLOWIP:-::/0}
 
 
 # Listen for RPC connections on this TCP port:
@@ -52,8 +51,8 @@ testnet=${BTC_TESTNET:-0}
 
 # Set database cache size in MiB
 dbcache=${BTC_DBCACHE:-512}
-
-prune=5000
+# if TXINDEX enable then prune should not be used.
+# prune=5000
 maxmempool=150
 maxreceivebuffer=2500
 maxsendbuffer=500
