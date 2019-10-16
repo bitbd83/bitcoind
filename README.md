@@ -15,7 +15,7 @@ fixed.
 
 ## Quick start
 
-Requires that [Docker be installed](https://docs.docker.com/install/) on the host machine.
+Requires that [Docker should be installed](https://docs.docker.com/install/) on the host machine.
 
 ```bash
 # Create some directory where your bitcoin data will be stored.
@@ -65,10 +65,13 @@ restart
 policies](https://docs.docker.com/config/containers/start-containers-automatically/#use-a-restart-policy),
 but if you're insistent on using systemd, you could do something like
 
-```bash
-$ cat /etc/systemd/system/bitcoind.service
+Create a "bitcoind.service"
+$ nano /etc/systemd/system/bitcoind.service
+$ systemctl start bitcoind
+$ systemctl enable bitcoind
 
-# bitcoind.service #######################################################################
+
+# bitcoind.service 
 [Unit]
 Description=Bitcoind
 After=docker.service
@@ -85,9 +88,42 @@ ExecStart=/usr/bin/docker run \
     -v /data/bitcoind:/root/.bitcoin \
     nexbitio/bitcoind
 ExecStop=/usr/bin/docker stop bitcoind
-```
+# Service file ends
+# Run : "docker logs -f bitcoind" to ensure that bitcoind continues to run.
+# Implement NGINX
 
-to ensure that bitcoind continues to run.
+~#apt-get install nginx
+~#nano /etc/nginx/nginx.conf
+# Basic NGINX conf below (can use ssl also)
+``
+worker_processes  auto;
+daemon off;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+    worker_connections  10024;
+}
+http {
+    sendfile      off;
+    access_log    off;
+    server_tokens off;
+    keepalive_timeout  65;
+    server {
+        charset utf-8;
+        client_max_body_size 128M;
+        listen 80;
+	location / {
+		proxy_pass http://127.0.0.1:8332;
+		proxy_redirect off;
+	}
+    }
+}
+``
 
 
-https://nexbit.io
+
+
+Thank you. For more support and products please visit: https://nexbit.io
+Mail me : developer@nexbit.io
